@@ -6,27 +6,29 @@ import requests
 from bs4 import BeautifulSoup as b
 
 
-API_KEY = '5850863234:AAHtitqv5BpUC4eDtlGN1EmLpzakuDVsQpM'
+# добавляем информаци о телеграм боте:
+# api_key - индефикатор бота (берется у https://t.me/BotFather)
+# chat_id - индефикатор чата, куда будут приходить сообщения от бота
+# url - сайт, с которого парсится информация
 
-# test chat_id
+API_KEY = 'ключ вашего бота'
+chat_id = 'айди чата'
+URL = 'http://ваш сайт'
 
-chat_id = '-1001965094555'
-URL = 'http://kobatoha.beget.tech/respawn/'
-
-
+# заносим информацию с сайта в список
 def parser(url):
     r = requests.get(url)
     soup = b(r.text, 'html.parser')
     respawntimes = soup.find_all('p', class_='content')
     return [c.text for c in respawntimes]
 
-
+# посылаем сообщение в группу с указанием имени босса, респ которого ожидается через 15 минут
 def send_respawn_notification(name, chat_id):
     bot = telebot.TeleBot(API_KEY)
     message = f"{name} через 15 минут"
     bot.send_message(chat_id, message)
 
-
+# обновляем информацию с сайта, т.к. информация меняется каждые 11 часов
 def update_time():
     list_of_times = parser(URL)
     print(list_of_times)
@@ -36,7 +38,7 @@ def update_time():
 list_of_times = parser(URL)
 
 
-# Отправляем сообщение со временем до респа каждого босса
+# Отправляем функции, отвечающей за отправку сообщения о респе, время, когда нужно послать месседж
 def check_respawn():
     print(datetime.now().strftime('%H:%M'))
     list_of_times = update_time()
@@ -52,20 +54,20 @@ def check_respawn():
         if datetime.now() <= boss_time_minus_10:
             schedule.every().day.at(schedule_time_str).do(send_respawn_notification, name=name, chat_id=chat_id)
 
-
+# обновляем первичные данные при запуске бота
 update_time()
 check_respawn()
 
-
+# расписание сообщений о респе Куки и соло РБ
 def solo_boss_and_kuka():
     now = datetime.now().strftime('%H:%M')
     solo_boss_time = ['08:45', '10:45', '12:45', '14:45', '16:45', '18:45', '20:45', '22:45', '00:45']
     if now in solo_boss_time:
         bot = telebot.TeleBot(API_KEY)
-        message = f'Кука - 5 минут, брат, а соло РБ через 15 минут'
+        message = f'Кука - 5 минут, а соло РБ через 15 минут'
         bot.send_message(chat_id, message)
 
-
+# расписание сообщений о респе соло РБ
 def solo_boss():
     now = datetime.now().strftime('%H:%M')
     solo_boss_time = ['08:55', '10:55', '12:55', '14:55', '16:55', '18:55', '20:55', '22:55', '00:55']
@@ -74,27 +76,28 @@ def solo_boss():
         message = f'Cоло РБ через 5 минут'
         bot.send_message(chat_id, message)
 
-
+# расписание для зачистки
 def zachistka():
     print(datetime.now().strftime('%H:%M'))
     message = f'Сегодня воскресенье, заберите зачистку'
     bot = telebot.TeleBot(API_KEY)
     bot.send_message(chat_id, message)
 
-
+# расписание для олимпиады
 def olimpiada():
     print(datetime.now().strftime('%H:%M'))
     message = f'Олимп через 15 минут'
     bot = telebot.TeleBot(API_KEY)
     bot.send_message(chat_id, message)
 
-
+# расписание об открытии острова Ада
 def hellbound():
     print(datetime.now().strftime('%H:%M'))
     message = f'залетаем на ХБ через 10 минут'
     bot = telebot.TeleBot(API_KEY)
     bot.send_message(chat_id, message)
 
+# Расписание отправки сообщений    
 schedule.every(3).hours.do(update_time)
 schedule.every(3).hours.do(check_respawn)
 schedule.every().hour.at(':55').do(solo_boss)
