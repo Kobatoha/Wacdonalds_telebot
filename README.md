@@ -7,12 +7,12 @@ Alarm telegram bot - Lineage 2 Essence (Бот-напоминалка)
 Помимо этого, телеграм бот имеет несколько событий, привязанных к опредленному времени и посылает уведомление в группу о предстоящих ивентах.
 
 Используемые библиотеки:
-Package            Version
------------------- ---------
-beautifulsoup4     4.11.2
-pyTelegramBotAPI   4.10.0
-requests           2.28.2
-schedule           1.1.0
+| Package           |  Version |
+| ----------------- | -------- |
+| beautifulsoup4    | 4.11.2   |
+| pyTelegramBotAPI  | 4.10.0   |
+| requests          | 2.28.2   |
+| schedule          | 1.1.0    |
 
 [+] Встроенные библиотеки time, datetime
 
